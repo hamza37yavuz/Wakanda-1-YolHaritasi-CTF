@@ -1,7 +1,7 @@
 ## Wakanda-1-YolHaritasi
 Çözdüğüm ctf'leri unutmamak amacıyla buraya adımlar şeklinde not alıyorum. Bu ctf'i [*vulnhubdan*](https://www.vulnhub.com/entry/wakanda-1,251/) bilgisayarınıza indirip virtualbox'ınıza kurabilirsiniz. Bu ctf'de elde ettiğimiz önemli bilgileri not.txt dosyasına kaydedeceğiz. Virtualbox'a kurduktan sonra makineyi başlatarak ctf'i çözmeye başlayabiliriz.
 ### *Adım 1:*
-İlk olarak tüm ctf'lerde olduğu gibi zafiyetli makinenin açık portlarına bakarak işe başlamayı düşündüm. Lakin nmap taraması yapmak için bir ip adresine ihtiyacımız var. Zafiyetli makine ile aynı ağda olduğumuz için `netdiscover -r 10.0.2.0/24` çalıştırarak ağımdaki ip'leri aşağıdaki gibi elde edebiliriz.
+İlk olarak tüm ctf'lerde olduğu gibi zafiyetli makinenin açık portlarına bakarak işe başlamayı düşünebiliriz. Lakin nmap taraması yapmak için bir ip adresine ihtiyacımız var. Zafiyetli makine ile aynı ağda olduğumuz için `netdiscover -r 10.0.2.0/24` çalıştırarak ağımızdaki ip'leri aşağıdaki gibi elde edebiliriz.
 
 ![](https://github.com/hamza37yavuz/Wakanda-1-YolHaritasi/blob/main/netdiscover.png)
 
@@ -61,7 +61,7 @@ Python dosyası
 Test dosyası 
 `test`
 
-Bu iki dosyaya bakarak python dosyasının daha önce çalıştırıldığını anlayabiliriz. Bunu bir cron dosyası yardımıyla belirli aralıklarla yaptığıda muhtemel olan diğer çıkarım. Bir sonraki adımda python dosyasını kullanacağız.
+Bu iki dosyaya bakarak python dosyasının daha önce çalıştırıldığını anlayabiliriz. Bunu bir cron dosyası yardımıyla belirli aralıklarla yaptığı da muhtemel olan diğer çıkarım. Bir sonraki adımda python dosyasını kullanacağız.
 ### *Adım 4:*
 Bu adımda python ile reverse shell oluşturacağız. ls -la ile baktığımızda python dosyasına yazma iznine sahip olduğumuzu görebiliriz. [Reverse shell için](https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet) sitesinde yer alan python reverse shell kodlarını kullanabiliriz. Bu sitede komut satırı için hazırlanan komutu python debug işlmine uygun hale getirerek dosyaya yazalım. reverse shellde ip kısmına kalimizin ip'sini yazarak dosyayı kaydedelim. Başka bir terminalde netcat çalıştıralım:
 
